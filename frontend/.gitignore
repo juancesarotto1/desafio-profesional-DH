@@ -51,6 +51,12 @@ Thumbs.db
 .env
 .env.*
 
+.mvn/
+.maven/
+target/
+*.class
+
+.target
 
 # Carpeta de compilación
 target/
