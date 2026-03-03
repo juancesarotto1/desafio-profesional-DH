@@ -1,7 +1,6 @@
 package com.carrental.backend.model;
 
 import jakarta.persistence.*;
-<<<<<<< HEAD
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,17 +11,10 @@ import java.util.Collections;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-=======
-
-@Entity
-@Table(name = "users")
-public class User {
->>>>>>> origin/master
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-<<<<<<< HEAD
     @Column(nullable = false)
     private String name;
 
@@ -88,8 +80,6 @@ public class User {
     }
 
     // Getters and Setters
-=======
->>>>>>> origin/master
     public Long getId() {
         return id;
     }
@@ -97,7 +87,6 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
-<<<<<<< HEAD
 
     public String getName() {
         return name;
@@ -138,6 +127,4 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-=======
->>>>>>> origin/master
 }

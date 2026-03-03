@@ -1,6 +1,5 @@
 package com.carrental.backend.config;
 
-<<<<<<< HEAD
 import com.carrental.backend.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,10 +44,4 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-=======
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-public class ApplicationConfig {
->>>>>>> origin/master
 }

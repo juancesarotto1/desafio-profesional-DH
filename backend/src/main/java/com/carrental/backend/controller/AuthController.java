@@ -1,6 +1,5 @@
 package com.carrental.backend.controller;
 
-<<<<<<< HEAD
 import com.carrental.backend.model.User;
 import com.carrental.backend.security.JwtService;
 import com.carrental.backend.service.UserService;
@@ -79,10 +78,4 @@ public class AuthController {
         userResponse.put("initials", user.getInitials());
         return userResponse;
     }
-=======
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class AuthController {
->>>>>>> origin/master
 }

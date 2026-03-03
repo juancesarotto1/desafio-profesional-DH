@@ -12,28 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Builds
-dist/
-build/
-
-# Cache
-.npm/
-.cache/
-
-*.class
-*.jar
-*.war
-*.ear
-
-# Base de datos local (H2 u otras)
-*.mv.db
-*.db
-
-# IDEs
-.idea/
-*.iml
-.vscode/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -44,19 +22,3 @@ build/
 *.njsproj
 *.sln
 *.sw?
-
-.DS_Store
-Thumbs.db
-
-.env
-.env.*
-
-.mvn/
-.maven/
-target/
-*.class
-
-.target
-
-# Carpeta de compilación
-target/

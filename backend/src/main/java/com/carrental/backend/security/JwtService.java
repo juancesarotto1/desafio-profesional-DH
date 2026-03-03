@@ -1,6 +1,5 @@
 package com.carrental.backend.security;
 
-<<<<<<< HEAD
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -88,10 +87,4 @@ public class JwtService {
         byte[] keyBytes = java.util.Base64.getDecoder().decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-=======
-import org.springframework.stereotype.Service;
-
-@Service
-public class JwtService {
->>>>>>> origin/master
 }

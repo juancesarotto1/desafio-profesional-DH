@@ -2,11 +2,8 @@ package com.carrental.backend.controller;
 
 import com.carrental.backend.model.Category;
 import com.carrental.backend.service.CategoryService;
-<<<<<<< HEAD
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-=======
->>>>>>> origin/master
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -26,7 +23,6 @@ public class CategoryController {
     }
 
     @PostMapping
-<<<<<<< HEAD
     @PreAuthorize("hasRole('ADMIN')")
     public Category create(@RequestBody Category category) {
         return categoryService.save(category);
@@ -52,9 +48,4 @@ public class CategoryController {
         categoryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
-=======
-    public Category create(@RequestBody Category category) {
-        return categoryService.save(category);
-    }
->>>>>>> origin/master
 }

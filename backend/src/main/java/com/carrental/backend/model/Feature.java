@@ -1,10 +1,7 @@
 package com.carrental.backend.model;
 
 import jakarta.persistence.*;
-<<<<<<< HEAD
 import java.util.Objects;
-=======
->>>>>>> origin/master
 
 @Entity
 @Table(name = "features")
@@ -13,7 +10,6 @@ public class Feature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-<<<<<<< HEAD
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -32,8 +28,6 @@ public class Feature {
     }
 
     // Getters and Setters
-=======
->>>>>>> origin/master
     public Long getId() {
         return id;
     }
@@ -41,7 +35,6 @@ public class Feature {
     public void setId(Long id) {
         this.id = id;
     }
-<<<<<<< HEAD
 
     public String getName() {
         return name;
@@ -79,6 +72,4 @@ public class Feature {
     public int hashCode() {
         return id != null ? Objects.hash(id) : Objects.hash(name);
     }
-=======
->>>>>>> origin/master
 }

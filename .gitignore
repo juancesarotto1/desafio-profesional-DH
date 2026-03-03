@@ -1,34 +1,23 @@
-# OS files
-.DS_Store
-Thumbs.db
-*.swp
+# Node
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/*.local
+
+# Maven
+**/target/
+**/.maven/
 
 # IDEs
 .idea/
 .vscode/
-*.iml
-*.iws
+*.swp
+*.swo
 
-# Node
-node_modules/
-dist/
-dist-ssr/
-*.local
+# OS
+.DS_Store
+Thumbs.db
 
-# Java / Maven
-target/
-.mvn/
-.maven/
-*.class
-*.jar
-*.war
-*.ear
-
-# Databases
-data/
-*.mv.db
-*.db
-
-# Environment files
-.env
-.env.*
+# Logs
+**/logs/
+**/*.log

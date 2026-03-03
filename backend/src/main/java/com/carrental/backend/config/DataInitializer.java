@@ -6,7 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -239,7 +238,7 @@ public class DataInitializer {
                         productRepository.saveAll(
                                         List.of(tesla, jeep, onix, mustang, audi, bmw, porsche, corolla, fiat));
 
-                        System.out.println("Sprint 1 Data initialized successfully!");
+                        System.out.println("Sprint 3 Data initialized successfully!");
                 };
         }
 }

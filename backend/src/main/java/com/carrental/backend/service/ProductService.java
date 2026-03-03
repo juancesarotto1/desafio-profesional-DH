@@ -1,6 +1,5 @@
 package com.carrental.backend.service;
 
-<<<<<<< HEAD
 import com.carrental.backend.model.Feature;
 import com.carrental.backend.model.Product;
 import com.carrental.backend.model.Category;
@@ -13,18 +12,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-=======
-import com.carrental.backend.model.Product;
-import com.carrental.backend.repository.ProductRepository;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
->>>>>>> origin/master
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-<<<<<<< HEAD
     private final CategoryRepository categoryRepository;
     private final FeatureRepository featureRepository;
 
@@ -51,22 +42,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-=======
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
-
->>>>>>> origin/master
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
 
-<<<<<<< HEAD
     @Transactional(readOnly = true)
     public List<Product> findByCategory(Long categoryId) {
         // La consulta DISTINCT en el repositorio ya elimina duplicados
@@ -125,13 +104,4 @@ public class ProductService {
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
-=======
-    public List<Product> findByCategory(Long categoryId) {
-        return productRepository.findByCategoryId(categoryId);
-    }
-
-    public Product save(Product product) {
-        return productRepository.save(product);
-    }
->>>>>>> origin/master
 }

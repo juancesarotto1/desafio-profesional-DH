@@ -1,12 +1,11 @@
 package com.carrental.backend.repository;
 
-import com.carrental.backend.model.User;
+import com.carrental.backend.model.Feature;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
+public interface FeatureRepository extends JpaRepository<Feature, Long> {
+    Optional<Feature> findByNameIgnoreCase(String name);
 }

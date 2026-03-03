@@ -1,6 +1,5 @@
 package com.carrental.backend.security;
 
-<<<<<<< HEAD
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,10 +62,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-=======
-import org.springframework.stereotype.Component;
-
-@Component
-public class JwtAuthenticationFilter {
->>>>>>> origin/master
 }
