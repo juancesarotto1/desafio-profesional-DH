@@ -2,6 +2,11 @@ package com.carrental.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+<<<<<<< HEAD
+import java.util.Set;
+import java.util.HashSet;
+=======
+>>>>>>> origin/master
 
 @Entity
 @Table(name = "products")
@@ -21,6 +26,20 @@ public class Product {
     private Double rating;
     private Integer trips;
 
+<<<<<<< HEAD
+    @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = jakarta.persistence.FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    private List<Image> images;
+
+    @ManyToMany(cascade = { CascadeType.MERGE }) // quitar PERSIST para no crear features duplicadas
+    @JoinTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "feature_id"))
+    private Set<Feature> features = new HashSet<>(); // usar Set para evitar duplicados
+
+=======
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -29,11 +48,16 @@ public class Product {
     @JoinColumn(name = "product_id")
     private List<Image> images;
 
+>>>>>>> origin/master
     public Product() {
     }
 
     public Product(Long id, String name, String description, String city, Double price, Double rating, Integer trips,
+<<<<<<< HEAD
+            Category category, List<Image> images, Set<Feature> features) {
+=======
             Category category, List<Image> images) {
+>>>>>>> origin/master
         this.id = id;
         this.name = name;
         this.description = description;
@@ -43,6 +67,10 @@ public class Product {
         this.trips = trips;
         this.category = category;
         this.images = images;
+<<<<<<< HEAD
+        this.features = features != null ? features : new HashSet<>();
+=======
+>>>>>>> origin/master
     }
 
     // Getters and Setters
@@ -118,6 +146,17 @@ public class Product {
         this.images = images;
     }
 
+<<<<<<< HEAD
+    public Set<Feature> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(Set<Feature> features) {
+        this.features = features;
+    }
+
+=======
+>>>>>>> origin/master
     public static ProductBuilder builder() {
         return new ProductBuilder();
     }
@@ -132,6 +171,10 @@ public class Product {
         private Integer trips;
         private Category category;
         private List<Image> images;
+<<<<<<< HEAD
+        private Set<Feature> features;
+=======
+>>>>>>> origin/master
 
         public ProductBuilder id(Long id) {
             this.id = id;
@@ -178,8 +221,18 @@ public class Product {
             return this;
         }
 
+<<<<<<< HEAD
+        public ProductBuilder features(Set<Feature> features) {
+            this.features = features;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(id, name, description, city, price, rating, trips, category, images, features);
+=======
         public Product build() {
             return new Product(id, name, description, city, price, rating, trips, category, images);
+>>>>>>> origin/master
         }
     }
 }

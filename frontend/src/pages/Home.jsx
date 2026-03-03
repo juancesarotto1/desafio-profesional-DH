@@ -4,6 +4,25 @@ import Categories from '../components/Categories';
 import Recommendations from '../components/Recommendations';
 import api from '../services/api';
 
+<<<<<<< HEAD
+// Deduplica elementos por nombre o título (más robusto si el backend manda el mismo auto con IDs distintos)
+const dedupeItems = (list) => {
+    if (!Array.isArray(list)) return [];
+    const seen = new Set();
+    const result = [];
+    for (const item of list) {
+        if (!item) continue;
+        const key = (item.name || item.title || item.id || '').toString().toLowerCase().trim();
+        if (key && !seen.has(key)) {
+            seen.add(key);
+            result.push(item);
+        }
+    }
+    return result;
+};
+
+=======
+>>>>>>> origin/master
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -14,15 +33,23 @@ const Home = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
+<<<<<<< HEAD
+=======
                 console.log('Fetching products and categories...');
+>>>>>>> origin/master
                 const [productsRes, categoriesRes] = await Promise.all([
                     api.get('/products'),
                     api.get('/categories')
                 ]);
+<<<<<<< HEAD
+                setProducts(dedupeItems(productsRes.data));
+                setCategories(dedupeItems(categoriesRes.data));
+=======
                 console.log('Products API response:', productsRes.data);
                 console.log('Categories API response:', categoriesRes.data);
                 setProducts(productsRes.data);
                 setCategories(categoriesRes.data);
+>>>>>>> origin/master
             } catch (error) {
                 console.error('Error fetching data:', error);
                 if (error.code === 'ERR_NETWORK') {
@@ -48,7 +75,11 @@ const Home = () => {
             try {
                 setLoading(true);
                 const response = await api.get('/products');
+<<<<<<< HEAD
+                setProducts(dedupeItems(response.data));
+=======
                 setProducts(response.data);
+>>>>>>> origin/master
                 setSelectedCategory(null);
             } catch (err) {
                 console.error('Error fetching all products:', err);
@@ -62,7 +93,11 @@ const Home = () => {
                 setLoading(true);
                 console.log(`Fetching products for category ${category.id} (${categoryName})...`);
                 const response = await api.get(`/products/category/${category.id}`);
+<<<<<<< HEAD
+                setProducts(dedupeItems(response.data));
+=======
                 setProducts(response.data);
+>>>>>>> origin/master
                 setSelectedCategory(categoryName);
             } catch (err) {
                 console.error('Error fetching category products:', err);
@@ -77,7 +112,11 @@ const Home = () => {
         try {
             setLoading(true);
             const response = await api.get('/products');
+<<<<<<< HEAD
+            setProducts(dedupeItems(response.data));
+=======
             setProducts(response.data);
+>>>>>>> origin/master
             setSelectedCategory(null);
         } catch (err) {
             console.error('Error clearing filter:', err);
@@ -91,9 +130,14 @@ const Home = () => {
     return (
         <div className="home-page">
             <Hero onSearchResults={(results) => {
+<<<<<<< HEAD
+                setProducts(dedupeItems(results || []));
+                setSelectedCategory(null);
+=======
                 console.log('Search results received:', results);
                 setProducts(results);
                 setSelectedCategory(null); // borrar filtro de categoria al buscar
+>>>>>>> origin/master
             }} />
 
             <div className="container">

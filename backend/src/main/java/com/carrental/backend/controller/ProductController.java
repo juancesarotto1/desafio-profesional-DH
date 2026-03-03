@@ -3,6 +3,10 @@ package com.carrental.backend.controller;
 import com.carrental.backend.model.Product;
 import com.carrental.backend.service.ProductService;
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
+import org.springframework.security.access.prepost.PreAuthorize;
+=======
+>>>>>>> origin/master
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +39,32 @@ public class ProductController {
     }
 
     @PostMapping
+<<<<<<< HEAD
+    @PreAuthorize("hasRole('ADMIN')")
     public Product create(@RequestBody Product product) {
         return productService.save(product);
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+        return productService.findById(id)
+                .map(existingProduct -> {
+                    product.setId(id);
+                    return ResponseEntity.ok(productService.save(product));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+=======
+    public Product create(@RequestBody Product product) {
+        return productService.save(product);
+    }
+>>>>>>> origin/master
 }

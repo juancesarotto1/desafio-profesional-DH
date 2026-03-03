@@ -2,6 +2,10 @@ package com.carrental.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+<<<<<<< HEAD
+import java.util.Objects;
+=======
+>>>>>>> origin/master
 
 @Entity
 @Table(name = "categories")
@@ -10,7 +14,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+<<<<<<< HEAD
+    @Column(nullable = false, unique = true)
+=======
     @Column(nullable = false)
+>>>>>>> origin/master
     @JsonProperty("title")
     private String name;
 
@@ -61,6 +69,22 @@ public class Category {
         this.imageUrl = imageUrl;
     }
 
+<<<<<<< HEAD
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+        Category that = (Category) o;
+        return id != null ? Objects.equals(id, that.id) : Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? Objects.hash(id) : Objects.hash(name);
+    }
+
+=======
+>>>>>>> origin/master
     // Helper for manual building if needed
     public static CategoryBuilder builder() {
         return new CategoryBuilder();

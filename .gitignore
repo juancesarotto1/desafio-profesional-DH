@@ -1,0 +1,34 @@
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Java / Maven
+target/
+.mvn/
+.maven/
+*.class
+*.jar
+*.war
+*.ear
+
+# Databases
+data/
+*.mv.db
+*.db
+
+# Environment files
+.env
+.env.*
