@@ -69,8 +69,8 @@ const Admin = () => {
     const handleAddOrUpdateProduct = async (e) => {
         e.preventDefault();
 
-        // Validar que haya al menos 5 imágenes
-        if (newProduct.images.length < 5) {
+        // Validar que haya al menos 5 imágenes solo al crear
+        if (!editingProduct && newProduct.images.length < 5) {
             alert('Por favor, ingresa al menos 5 imágenes para el auto');
             return;
         }
@@ -239,7 +239,8 @@ const Admin = () => {
             fetchData();
         } catch (error) {
             console.error('Error deleting category:', error);
-            alert('Error al eliminar categoría. Verifique que no tenga productos asociados.');
+            const msg = error.response?.data?.message || error.response?.data || 'Error al eliminar categoría. Verifique que no tenga productos asociados.';
+            alert(msg);
         }
     };
 
@@ -348,7 +349,7 @@ const Admin = () => {
                                                 </div>
 
                                                 <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginBottom: '12px' }}>
-                                                    {newProduct.images.length < 5
+                                                    {!editingProduct && newProduct.images.length < 5
                                                         ? `Faltan ${5 - newProduct.images.length} imágenes para poder guardar.`
                                                         : '¡Listo! Tienes suficientes imágenes.'}
                                                 </small>
@@ -394,8 +395,8 @@ const Admin = () => {
                                         <button
                                             type="submit"
                                             className="btn-primary w-full"
-                                            disabled={newProduct.images.length < 5}
-                                            style={{ opacity: newProduct.images.length < 5 ? 0.6 : 1, cursor: newProduct.images.length < 5 ? 'not-allowed' : 'pointer' }}
+                                            disabled={!editingProduct && newProduct.images.length < 5}
+                                            style={{ opacity: (!editingProduct && newProduct.images.length < 5) ? 0.6 : 1, cursor: (!editingProduct && newProduct.images.length < 5) ? 'not-allowed' : 'pointer' }}
                                         >
                                             {editingProduct ? 'Actualizar' : 'Guardar'}
                                         </button>

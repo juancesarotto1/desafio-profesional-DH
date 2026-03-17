@@ -3,6 +3,7 @@ package com.carrental.backend.service;
 import com.carrental.backend.model.Feature;
 import com.carrental.backend.model.Product;
 import com.carrental.backend.model.Category;
+import com.carrental.backend.repository.BookingRepository;
 import com.carrental.backend.repository.CategoryRepository;
 import com.carrental.backend.repository.FeatureRepository;
 import com.carrental.backend.repository.ProductRepository;
@@ -18,11 +19,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final FeatureRepository featureRepository;
+    private final BookingRepository bookingRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, FeatureRepository featureRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository,
+            FeatureRepository featureRepository, BookingRepository bookingRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.featureRepository = featureRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Transactional(readOnly = true)
@@ -63,35 +67,39 @@ public class ProductService {
     }
 
     public Product save(Product product) {
-        // Resolve or create category by name if provided without id
+        // Resolve category: prefer id lookup first, then name-based fallback
         if (product.getCategory() != null) {
             Category cat = product.getCategory();
-            String catName = cat.getName() != null ? cat.getName().trim() : null;
-            if (catName != null && (cat.getId() == null || cat.getId() == 0L)) {
-                Category existing = categoryRepository.findByNameIgnoreCase(catName).orElse(null);
-                if (existing != null) {
-                    product.setCategory(existing);
-                } else {
-                    // create and persist new category to avoid transient references
-                    Category toSave = new Category(null, catName, cat.getDescription(), cat.getImageUrl());
-                    product.setCategory(categoryRepository.save(toSave));
+            if (cat.getId() != null && cat.getId() != 0L) {
+                // Fetch managed entity from DB to avoid detached entity issues
+                categoryRepository.findById(cat.getId()).ifPresent(product::setCategory);
+            } else {
+                String catName = cat.getName() != null ? cat.getName().trim() : null;
+                if (catName != null) {
+                    Category existing = categoryRepository.findByNameIgnoreCase(catName).orElse(null);
+                    if (existing != null) {
+                        product.setCategory(existing);
+                    } else {
+                        Category toSave = new Category(null, catName, cat.getDescription(), cat.getImageUrl());
+                        product.setCategory(categoryRepository.save(toSave));
+                    }
                 }
             }
         }
 
-        // Resolve features by name to reuse existing ones or persist new ones
+        // Resolve features: fetch managed entities from DB to avoid detached/transient issues
         if (product.getFeatures() != null && !product.getFeatures().isEmpty()) {
             Set<Feature> resolved = product.getFeatures().stream()
+                    .filter(f -> f != null)
                     .map(f -> {
-                        if (f == null) return null;
-                        if (f.getId() != null) return f; // assume managed
+                        if (f.getId() != null) {
+                            // Fetch managed entity from DB
+                            return featureRepository.findById(f.getId()).orElse(null);
+                        }
                         String fname = f.getName() != null ? f.getName().trim() : null;
                         if (fname == null) return null;
-                        Optional<Feature> existing = featureRepository.findByNameIgnoreCase(fname);
-                        if (existing.isPresent()) return existing.get();
-                        // persist a new feature so it's managed
-                        Feature toSave = new Feature(fname, f.getIcon(), f.getDescription());
-                        return featureRepository.save(toSave);
+                        return featureRepository.findByNameIgnoreCase(fname)
+                                .orElseGet(() -> featureRepository.save(new Feature(fname, f.getIcon(), f.getDescription())));
                     })
                     .filter(f -> f != null)
                     .collect(Collectors.toSet());
@@ -101,7 +109,10 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional
     public void deleteById(Long id) {
+        // Remove bookings for this product first to avoid FK constraint
+        bookingRepository.deleteAll(bookingRepository.findByProductId(id));
         productRepository.deleteById(id);
     }
 }
