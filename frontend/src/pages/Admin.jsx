@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, LayoutDashboard, Car, Layers, CheckSquare, XCircle, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, LayoutDashboard, Car, Layers, CheckSquare, XCircle, Image as ImageIcon, Zap, Users } from 'lucide-react';
 import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -11,15 +11,20 @@ const Admin = () => {
     const [activeTab, setActiveTab] = useState('products');
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [features, setFeatures] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // estados de los formularios
     const [editingProduct, setEditingProduct] = useState(null);
     const [editingCategory, setEditingCategory] = useState(null);
+    const [editingFeature, setEditingFeature] = useState(null);
     const [newProduct, setNewProduct] = useState({ name: '', description: '', images: [], categoryId: '', price: 95, features: [], imageUrl: '' });
     const [newCategory, setNewCategory] = useState({ title: '', description: '', urlImage: '' });
+    const [newFeature, setNewFeature] = useState({ name: '', icon: '', description: '' });
     const [showProductForm, setShowProductForm] = useState(false);
     const [showCategoryForm, setShowCategoryForm] = useState(false);
+    const [showFeatureForm, setShowFeatureForm] = useState(false);
 
     useEffect(() => {
         // Verificar si el usuario es admin antes de permitir acceso
@@ -37,12 +42,16 @@ const Admin = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [productsRes, categoriesRes] = await Promise.all([
+            const [productsRes, categoriesRes, featuresRes, usersRes] = await Promise.all([
                 api.get('/products'),
-                api.get('/categories')
+                api.get('/categories'),
+                api.get('/features'),
+                api.get('/users')
             ]);
             setProducts(dedupeById(productsRes.data));
             setCategories(dedupeById(categoriesRes.data));
+            setFeatures(dedupeById(featuresRes.data));
+            setUsers(dedupeById(usersRes.data));
         } catch (error) {
             console.error('Error fetching data:', error);
             alert('Error al cargar los datos');
@@ -162,6 +171,54 @@ const Admin = () => {
         }
     };
 
+    const handleAddOrUpdateFeature = async (e) => {
+        e.preventDefault();
+        try {
+            if (editingFeature) {
+                await api.put(`/features/${editingFeature.id}`, newFeature);
+                alert('Característica actualizada con éxito');
+            } else {
+                await api.post('/features', newFeature);
+                alert('Característica creada con éxito');
+            }
+            setShowFeatureForm(false);
+            setEditingFeature(null);
+            setNewFeature({ name: '', icon: '', description: '' });
+            fetchData();
+        } catch (error) {
+            console.error('Error saving feature:', error);
+            alert('Error al guardar la característica');
+        }
+    };
+
+    const startEditFeature = (feature) => {
+        setEditingFeature(feature);
+        setNewFeature({ name: feature.name, icon: feature.icon || '', description: feature.description || '' });
+        setShowFeatureForm(true);
+    };
+
+    const handleDeleteFeature = async (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar esta característica?')) return;
+        try {
+            await api.delete(`/features/${id}`);
+            alert('Característica eliminada con éxito');
+            fetchData();
+        } catch (error) {
+            console.error('Error deleting feature:', error);
+            alert('Error al eliminar la característica');
+        }
+    };
+
+    const handleChangeRole = async (id, role) => {
+        try {
+            await api.put(`/users/${id}/role`, { role });
+            setUsers(prev => prev.map(u => u.id === id ? { ...u, role } : u));
+        } catch (error) {
+            console.error('Error changing role:', error);
+            alert('Error al cambiar el rol del usuario');
+        }
+    };
+
     const [confirmingDeleteCategoryId, setConfirmingDeleteCategoryId] = useState(null);
 
     const handleDeleteCategory = async (id) => {
@@ -210,11 +267,13 @@ const Admin = () => {
                         <nav>
                             <button className={activeTab === 'products' ? 'active' : ''} onClick={() => setActiveTab('products')}><Car size={18} /> Productos</button>
                             <button className={activeTab === 'categories' ? 'active' : ''} onClick={() => setActiveTab('categories')}><Layers size={18} /> Categorías</button>
+                            <button className={activeTab === 'features' ? 'active' : ''} onClick={() => setActiveTab('features')}><Zap size={18} /> Características</button>
+                            <button className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}><Users size={18} /> Usuarios</button>
                         </nav>
                     </aside>
 
                     <main className="admin-main">
-                        {activeTab === 'products' ? (
+                        {activeTab === 'products' && (
                             <section>
                                 <div className="header-row">
                                     <h2>Gestión de Productos</h2>
@@ -357,7 +416,8 @@ const Admin = () => {
                                     ))}
                                 </div>
                             </section>
-                        ) : (
+                        )}
+                        {activeTab === 'categories' && (
                             <section>
                                 <div className="header-row">
                                     <h2>Gestión de Categorías</h2>
@@ -407,6 +467,86 @@ const Admin = () => {
                                                         </button>
                                                     </>
                                                 )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+                        {activeTab === 'features' && (
+                            <section>
+                                <div className="header-row">
+                                    <h2>Gestión de Características</h2>
+                                    <button className="btn-primary" onClick={() => {
+                                        setEditingFeature(null);
+                                        setNewFeature({ name: '', icon: '', description: '' });
+                                        setShowFeatureForm(!showFeatureForm);
+                                    }}><Plus size={18} /> {showFeatureForm ? 'Cancelar' : 'Nueva Característica'}</button>
+                                </div>
+                                {showFeatureForm && (
+                                    <form className="admin-form glass" onSubmit={handleAddOrUpdateFeature}>
+                                        <h3>{editingFeature ? 'Editar Característica' : 'Crear Característica'}</h3>
+                                        <div className="form-group">
+                                            <label>Nombre</label>
+                                            <input type="text" required value={newFeature.name} onChange={e => setNewFeature({ ...newFeature, name: e.target.value })} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Ícono (emoji o texto)</label>
+                                            <input type="text" placeholder="ej: 🔥 o fa-wifi" value={newFeature.icon} onChange={e => setNewFeature({ ...newFeature, icon: e.target.value })} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Descripción</label>
+                                            <input type="text" value={newFeature.description} onChange={e => setNewFeature({ ...newFeature, description: e.target.value })} />
+                                        </div>
+                                        <button type="submit" className="btn-primary w-full">{editingFeature ? 'Actualizar' : 'Crear'}</button>
+                                    </form>
+                                )}
+                                <div className="data-list">
+                                    {features.map(f => (
+                                        <div key={f.id} className="data-item">
+                                            <div className="item-info">
+                                                <span style={{ fontSize: '1.5rem', minWidth: '32px', textAlign: 'center' }}>{f.icon || '⚡'}</span>
+                                                <div>
+                                                    <h3>{f.name}</h3>
+                                                    {f.description && <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{f.description.substring(0, 60)}{f.description.length > 60 ? '...' : ''}</p>}
+                                                </div>
+                                            </div>
+                                            <div className="actions">
+                                                <button className="icon-btn edit" onClick={() => startEditFeature(f)} style={{ color: 'var(--primary)', marginRight: '10px' }}>Editar</button>
+                                                <button className="icon-btn delete" onClick={() => handleDeleteFeature(f.id)}><Trash2 size={18} /></button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+                        {activeTab === 'users' && (
+                            <section>
+                                <div className="header-row">
+                                    <h2>Gestión de Usuarios</h2>
+                                </div>
+                                <div className="data-list">
+                                    {users.map(u => (
+                                        <div key={u.id} className="data-item">
+                                            <div className="item-info">
+                                                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', flexShrink: 0 }}>
+                                                    {(u.name?.charAt(0) || '').toUpperCase()}{(u.lastname?.charAt(0) || '').toUpperCase()}
+                                                </div>
+                                                <div>
+                                                    <h3>{u.name} {u.lastname}</h3>
+                                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{u.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="actions" style={{ gap: '12px', display: 'flex', alignItems: 'center' }}>
+                                                <span className="cat-badge" style={{ color: u.role === 'ADMIN' ? '#e67e22' : 'var(--primary)', borderColor: u.role === 'ADMIN' ? '#e67e22' : 'var(--primary)' }}>{u.role}</span>
+                                                <select
+                                                    value={u.role}
+                                                    onChange={e => handleChangeRole(u.id, e.target.value)}
+                                                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--border)', fontSize: '0.85rem', cursor: 'pointer' }}
+                                                >
+                                                    <option value="USER">USER</option>
+                                                    <option value="ADMIN">ADMIN</option>
+                                                </select>
                                             </div>
                                         </div>
                                     ))}

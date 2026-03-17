@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,19 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User updateRole(Long id, String role) {
+        if (!"USER".equals(role) && !"ADMIN".equals(role)) {
+            throw new RuntimeException("Invalid role: " + role);
+        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        user.setRole(role);
+        return userRepository.save(user);
     }
 }
